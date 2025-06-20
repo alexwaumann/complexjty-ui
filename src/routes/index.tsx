@@ -1,13 +1,13 @@
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import reactLogo from "../assets/react.svg";
+import reactLogo from "~/assets/react.svg";
 import viteLogo from "/vite.svg";
-import CardContent from "@mui/material/CardContent";
 
 export const Route = createFileRoute("/")({
   component: RootComponent,
