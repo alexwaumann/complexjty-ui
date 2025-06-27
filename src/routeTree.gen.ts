@@ -9,8 +9,38 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./routes/__root"
+import { Route as TradeRouteImport } from "./routes/trade"
+import { Route as StoreRouteImport } from "./routes/store"
+import { Route as LeaderboardRouteImport } from "./routes/leaderboard"
+import { Route as FeedRouteImport } from "./routes/feed"
+import { Route as ArenaRouteImport } from "./routes/arena"
 import { Route as IndexRouteImport } from "./routes/index"
 
+const TradeRoute = TradeRouteImport.update({
+  id: "/trade",
+  path: "/trade",
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StoreRoute = StoreRouteImport.update({
+  id: "/store",
+  path: "/store",
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeaderboardRoute = LeaderboardRouteImport.update({
+  id: "/leaderboard",
+  path: "/leaderboard",
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedRoute = FeedRouteImport.update({
+  id: "/feed",
+  path: "/feed",
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArenaRoute = ArenaRouteImport.update({
+  id: "/arena",
+  path: "/arena",
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: "/",
   path: "/",
@@ -19,28 +49,90 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute
+  "/arena": typeof ArenaRoute
+  "/feed": typeof FeedRoute
+  "/leaderboard": typeof LeaderboardRoute
+  "/store": typeof StoreRoute
+  "/trade": typeof TradeRoute
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute
+  "/arena": typeof ArenaRoute
+  "/feed": typeof FeedRoute
+  "/leaderboard": typeof LeaderboardRoute
+  "/store": typeof StoreRoute
+  "/trade": typeof TradeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   "/": typeof IndexRoute
+  "/arena": typeof ArenaRoute
+  "/feed": typeof FeedRoute
+  "/leaderboard": typeof LeaderboardRoute
+  "/store": typeof StoreRoute
+  "/trade": typeof TradeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: "/"
+  fullPaths: "/" | "/arena" | "/feed" | "/leaderboard" | "/store" | "/trade"
   fileRoutesByTo: FileRoutesByTo
-  to: "/"
-  id: "__root__" | "/"
+  to: "/" | "/arena" | "/feed" | "/leaderboard" | "/store" | "/trade"
+  id:
+    | "__root__"
+    | "/"
+    | "/arena"
+    | "/feed"
+    | "/leaderboard"
+    | "/store"
+    | "/trade"
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ArenaRoute: typeof ArenaRoute
+  FeedRoute: typeof FeedRoute
+  LeaderboardRoute: typeof LeaderboardRoute
+  StoreRoute: typeof StoreRoute
+  TradeRoute: typeof TradeRoute
 }
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
+    "/trade": {
+      id: "/trade"
+      path: "/trade"
+      fullPath: "/trade"
+      preLoaderRoute: typeof TradeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/store": {
+      id: "/store"
+      path: "/store"
+      fullPath: "/store"
+      preLoaderRoute: typeof StoreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/leaderboard": {
+      id: "/leaderboard"
+      path: "/leaderboard"
+      fullPath: "/leaderboard"
+      preLoaderRoute: typeof LeaderboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/feed": {
+      id: "/feed"
+      path: "/feed"
+      fullPath: "/feed"
+      preLoaderRoute: typeof FeedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/arena": {
+      id: "/arena"
+      path: "/arena"
+      fullPath: "/arena"
+      preLoaderRoute: typeof ArenaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     "/": {
       id: "/"
       path: "/"
@@ -53,6 +145,11 @@ declare module "@tanstack/react-router" {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ArenaRoute: ArenaRoute,
+  FeedRoute: FeedRoute,
+  LeaderboardRoute: LeaderboardRoute,
+  StoreRoute: StoreRoute,
+  TradeRoute: TradeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

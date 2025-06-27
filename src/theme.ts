@@ -32,6 +32,9 @@ export const theme = responsiveFontSizes(
       secondary: {
         main: "#90caf9",
       },
+      background: {
+        paper: "#0a0a0a",
+      },
       rarity: {
         common: "white",
         uncommon: "#388e3c",
@@ -41,18 +44,45 @@ export const theme = responsiveFontSizes(
       },
     },
 
-    shape: { borderRadius: 12 },
-
     components: {
-      MuiAppBar: { defaultProps: { variant: "outlined", elevation: 0 } },
       MuiAvatar: { defaultProps: { variant: "rounded" } },
       MuiButton: {
         defaultProps: { disableElevation: true, variant: "outlined" },
       },
-      MuiCard: { defaultProps: { variant: "outlined" } },
+      MuiPaper: { defaultProps: { elevation: 0 } },
       MuiSelect: { defaultProps: { variant: "outlined" } },
       MuiTextField: { defaultProps: { variant: "outlined" } },
     },
+
+    shape: { borderRadius: 12 },
+
+    shadows: [
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+    ],
 
     typography: {
       button: {
