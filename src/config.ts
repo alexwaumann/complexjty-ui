@@ -4,7 +4,7 @@ import { QueryClient } from "@tanstack/react-query";
 
 export const queryClient = new QueryClient();
 
-export const accountKitConfig = createConfig({
+export const alchemyAccountsConfig = createConfig({
   chain: optimismSepolia,
   transport: alchemy({
     alchemyConnection: {
