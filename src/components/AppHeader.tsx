@@ -5,7 +5,6 @@ import StoreIcon from "@mui/icons-material/StorefrontOutlined";
 import FeedIcon from "@mui/icons-material/WhatshotOutlined";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import ToggleButton from "@mui/material/ToggleButton";
@@ -13,12 +12,16 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 
+import { CreateAccountButton } from "~/components/CreateAccountButton";
+import { LoginButton } from "./LoginButton";
+import { useSignerStatus } from "~/hooks/account-kit/useSignerStatus";
+
 export function AppHeader() {
+  const signerStatus = useSignerStatus();
   const navigate = useNavigate();
   const page = useLocation({
     select: (location) => location.pathname.split("/")[1] ?? "",
   });
-  const isAuthenticated = false;
 
   // TODO: create custome navItem that utilizes custom tanstack Link
   function navigateToPage(newPage: string) {
@@ -68,10 +71,10 @@ export function AppHeader() {
       <Box sx={{ flexGrow: 1 }} />
 
       <Stack direction="row" spacing={1.5}>
-        {!isAuthenticated ?
+        {!signerStatus.isConnected ?
           <>
-            <Button>Create Account</Button>
-            <Button variant="contained">Login</Button>
+            <CreateAccountButton></CreateAccountButton>
+            <LoginButton></LoginButton>
           </>
         : <>
             <Paper
