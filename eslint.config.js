@@ -53,7 +53,6 @@ export default tseslint.config(
       "no-var": "error",
       "prefer-arrow-callback": "error",
       "prefer-const": "error",
-      "require-await": "error",
     },
   },
   eslintConfigPrettier,
