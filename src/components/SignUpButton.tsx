@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import { useSigner } from "~/hooks/account-kit/useSigner";
 
-export function CreateAccountButton() {
+export function SignUpButton() {
   const signer = useSigner();
 
   const [anchor, setAnchor] = useState<HTMLButtonElement | null>(null);

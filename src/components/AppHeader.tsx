@@ -12,8 +12,8 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 
-import { CreateAccountButton } from "~/components/CreateAccountButton";
-import { LoginButton } from "./LoginButton";
+import { SignInButton } from "~/components/SignInButton";
+import { SignUpButton } from "~/components/SignUpButton";
 import { useSignerStatus } from "~/hooks/account-kit/useSignerStatus";
 
 export function AppHeader() {
@@ -73,8 +73,8 @@ export function AppHeader() {
       <Stack direction="row" spacing={1.5}>
         {!signerStatus.isConnected ?
           <>
-            <CreateAccountButton></CreateAccountButton>
-            <LoginButton></LoginButton>
+            <SignUpButton />
+            <SignInButton />
           </>
         : <>
             <Paper

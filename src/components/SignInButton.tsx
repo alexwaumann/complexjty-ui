@@ -2,7 +2,7 @@ import Button from "@mui/material/Button";
 import { useSigner } from "~/hooks/account-kit/useSigner";
 import { useSignerStatus } from "~/hooks/account-kit/useSignerStatus";
 
-export function LoginButton() {
+export function SignInButton() {
   const signerStatus = useSignerStatus();
   const signer = useSigner();
 
