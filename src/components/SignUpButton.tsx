@@ -8,78 +8,55 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
-import { useSigner } from "~/hooks/account-kit/useSigner";
+import { isValidPasskeyName, useSignUp } from "~/hooks/account-kit/useSignUp";
 
 export function SignUpButton() {
-  const signer = useSigner();
+  const { signUp, isSigningUp } = useSignUp();
+  const [passkeyName, setPasskeyName] = useState("");
 
   const [anchor, setAnchor] = useState<HTMLButtonElement | null>(null);
+  const isPopoverOpen = Boolean(anchor);
 
-  const open = Boolean(anchor);
-  const [loading, setLoading] = useState(false);
-
-  const [accountName, setAccountName] = useState("");
-
-  const handleCreateAccount = () => {
-    if (!signer) {
-      return;
-    }
-
-    setLoading(true);
-
-    signer
-      .authenticate({
-        type: "passkey",
-        createNew: true,
-        username: accountName.trim().replace(" ", "-"),
-      })
-      .then((user) => {
-        console.log("user", user);
-        setAccountName("");
-        handleClose();
-      })
-      .catch((error) => console.error("ahhh error creating passkey", error))
-      .finally(() => setLoading(false));
-  };
-
-  const handleAccountNameInput = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const name = event.target.value;
-    const regex = /^[a-zA-Z0-9 ]/;
-
-    if (name === "") {
-      setAccountName("");
-      return;
-    }
-
-    const meetsLengthRequirement = name.length < 30;
-    const meetsSpacesRequirement = !name.includes("  ");
-    const meetsCharacterRequirement = regex.test(name);
-
-    if (
-      meetsLengthRequirement &&
-      meetsSpacesRequirement &&
-      meetsCharacterRequirement
-    ) {
-      setAccountName(name);
-    }
-  };
-
-  const handleEnterOnInput = (event: React.KeyboardEvent) => {
-    if (accountName === "" || event.key !== "Enter") {
-      return;
-    }
-
-    handleCreateAccount();
-  };
-
-  const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleOpenPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchor(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClosePopover = () => {
     setAnchor(null);
+    setPasskeyName("");
+  };
+
+  const handleSignUp = () => {
+    if (!isValidPasskeyName(passkeyName)) {
+      return;
+    }
+
+    signUp({ passkeyName }, { onSuccess: () => handleClosePopover() });
+  };
+
+  const handlePasskeyNameInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const name = event.target.value;
+
+    if (name === "") {
+      setPasskeyName("");
+      return;
+    }
+
+    if (!isValidPasskeyName(name)) {
+      return;
+    }
+
+    setPasskeyName(name);
+  };
+
+  const handleEnterOnPasskeyNameInput = (event: React.KeyboardEvent) => {
+    if (event.key !== "Enter" || passkeyName === "") {
+      return;
+    }
+
+    handleSignUp();
   };
 
   const setInputFocus = (element: HTMLInputElement | null) => {
@@ -92,12 +69,12 @@ export function SignUpButton() {
 
   return (
     <>
-      <Button loading={loading} onClick={handleOpen}>
+      <Button loading={isSigningUp} onClick={handleOpenPopover} size="large">
         Sign Up
       </Button>
       <Popover
-        open={open}
-        onClose={handleClose}
+        open={isPopoverOpen}
+        onClose={handleClosePopover}
         anchorEl={anchor}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
@@ -111,11 +88,11 @@ export function SignUpButton() {
         >
           <TextField
             inputRef={setInputFocus}
-            onChange={handleAccountNameInput}
-            onKeyDown={handleEnterOnInput}
-            value={accountName}
-            label="Account Name"
-            placeholder="Account 1"
+            onChange={handlePasskeyNameInputChange}
+            onKeyDown={handleEnterOnPasskeyNameInput}
+            value={passkeyName}
+            label="Passkey Name"
+            placeholder="Passkey 1"
             slotProps={{
               input: {
                 startAdornment: (
@@ -131,14 +108,14 @@ export function SignUpButton() {
           <Button
             variant="contained"
             startIcon={<PassKeyIcon />}
-            onClick={handleCreateAccount}
+            onClick={handleSignUp}
             loadingPosition="start"
-            loading={loading}
-            disabled={accountName.length === 0}
+            loading={isSigningUp}
+            disabled={passkeyName.length === 0}
             size="large"
             fullWidth
           >
-            Create Account with Passkey
+            Sign Up with Passkey
           </Button>
           <Typography variant="caption">
             By signing up, you agree to the{" "}
