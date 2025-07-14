@@ -69,8 +69,8 @@ export function SignUpButton() {
 
   return (
     <>
-      <Button loading={isSigningUp} onClick={handleOpenPopover} size="large">
-        Sign Up
+      <Button variant="text" onClick={handleOpenPopover} size="large">
+        Sign up
       </Button>
       <Popover
         open={isPopoverOpen}
@@ -91,7 +91,7 @@ export function SignUpButton() {
             onChange={handlePasskeyNameInputChange}
             onKeyDown={handleEnterOnPasskeyNameInput}
             value={passkeyName}
-            label="Passkey Name"
+            label="Passkey name"
             placeholder="Passkey 1"
             slotProps={{
               input: {
@@ -115,7 +115,7 @@ export function SignUpButton() {
             size="large"
             fullWidth
           >
-            Sign Up with Passkey
+            Sign up with passkey
           </Button>
           <Typography variant="caption">
             By signing up, you agree to the{" "}
