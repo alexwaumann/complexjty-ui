@@ -1,29 +1,18 @@
 import Button from "@mui/material/Button";
-import { useSigner } from "~/hooks/account-kit/useSigner";
-import { useSignerStatus } from "~/hooks/account-kit/useSignerStatus";
+import { useSignIn } from "~/hooks/account-kit/useSignIn";
 
 export function SignInButton() {
-  const signerStatus = useSignerStatus();
-  const signer = useSigner();
-
-  function onLogin() {
-    if (!signer) {
-      return;
-    }
-
-    signer
-      .authenticate({ type: "passkey", createNew: false })
-      .then((user) => console.log(user))
-      .catch((error) => console.error("error logging in", error));
-  }
+  const { signIn, isSigningIn } = useSignIn();
 
   return (
     <Button
       variant="contained"
-      loading={signerStatus.isAuthenticating}
-      onClick={() => onLogin()}
+      loadingPosition="start"
+      loading={isSigningIn}
+      onClick={() => signIn()}
+      size="large"
     >
-      Login
+      Sign in
     </Button>
   );
 }
