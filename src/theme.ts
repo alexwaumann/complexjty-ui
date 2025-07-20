@@ -49,40 +49,12 @@ export const theme = responsiveFontSizes(
       MuiButton: {
         defaultProps: { disableElevation: true, variant: "outlined" },
       },
-      MuiPaper: { defaultProps: { elevation: 0 } },
+      MuiPaper: { defaultProps: { variant: "outlined" } },
       MuiSelect: { defaultProps: { variant: "outlined" } },
       MuiTextField: { defaultProps: { variant: "outlined" } },
     },
 
     shape: { borderRadius: 12 },
-
-    shadows: [
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-    ],
 
     typography: {
       button: {

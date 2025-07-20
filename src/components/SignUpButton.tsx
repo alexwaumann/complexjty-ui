@@ -69,7 +69,7 @@ export function SignUpButton() {
 
   return (
     <>
-      <Button variant="text" onClick={handleOpenPopover} size="large">
+      <Button variant="outlined" onClick={handleOpenPopover} size="large">
         Sign up
       </Button>
       <Popover
