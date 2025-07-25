@@ -9,15 +9,15 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import Typography from "@mui/material/Typography";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 
+import { AccountButton } from "~/components/AccountButton";
 import { SignInButton } from "~/components/SignInButton";
 import { SignUpButton } from "~/components/SignUpButton";
-import { useSignerStatus } from "~/hooks/account-kit/useSignerStatus";
+import { useAccount } from "~/hooks/account-kit/useAccount";
 
 export function AppHeader() {
-  const signerStatus = useSignerStatus();
+  const { account } = useAccount();
   const navigate = useNavigate();
   const page = useLocation({
     select: (location) => location.pathname.split("/")[1] ?? "",
@@ -38,7 +38,7 @@ export function AppHeader() {
         <Avatar
           variant="rounded"
           src="/logo.png"
-          sx={{ width: 64, height: 64 }}
+          sx={{ width: 56, height: 56 }}
         />
 
         <Paper>
@@ -47,21 +47,21 @@ export function AppHeader() {
             value={page}
             onChange={(_, value: string) => navigateToPage(`/${value}`)}
             color="primary"
-            sx={{ height: 64 }}
+            sx={{ height: 56 }}
           >
-            <ToggleButton value="trade" sx={{ border: 0, width: 64 }}>
+            <ToggleButton value="trade" sx={{ border: 0, width: 56 }}>
               <TradeIcon />
             </ToggleButton>
-            <ToggleButton value="feed" sx={{ border: 0, width: 64 }}>
+            <ToggleButton value="feed" sx={{ border: 0, width: 56 }}>
               <FeedIcon />
             </ToggleButton>
-            <ToggleButton value="arena" sx={{ border: 0, width: 64 }}>
+            <ToggleButton value="arena" sx={{ border: 0, width: 56 }}>
               <ArenaIcon />
             </ToggleButton>
-            <ToggleButton value="leaderboard" sx={{ border: 0, width: 64 }}>
+            <ToggleButton value="leaderboard" sx={{ border: 0, width: 56 }}>
               <LeaderboardIcon />
             </ToggleButton>
-            <ToggleButton value="store" sx={{ border: 0, width: 64 }}>
+            <ToggleButton value="store" sx={{ border: 0, width: 56 }}>
               <StoreIcon />
             </ToggleButton>
           </ToggleButtonGroup>
@@ -71,44 +71,13 @@ export function AppHeader() {
       <Box sx={{ flexGrow: 1 }} />
 
       <Stack direction="row" spacing={1.5}>
-        {!signerStatus.isConnected ?
+        {!account ?
           <>
             <SignUpButton />
             <SignInButton />
           </>
         : <>
-            <Paper
-              sx={{
-                height: 64,
-                padding: 2,
-              }}
-            >
-              <Stack
-                direction="row"
-                spacing={2}
-                alignItems="center"
-                height="100%"
-              >
-                <Stack direction="column" alignItems="center">
-                  <Typography variant="subtitle1" color="primary">
-                    godyl
-                  </Typography>
-                  <Typography variant="caption">0x1A3...2b4C</Typography>
-                </Stack>
-              </Stack>
-            </Paper>
-
-            <Avatar
-              variant="rounded"
-              src="/placeholder-pfp.png"
-              sx={{
-                height: 64,
-                width: 64,
-                border: 1,
-                borderWidth: 2,
-                borderColor: "rarity.artifact",
-              }}
-            />
+            <AccountButton />
           </>
         }
       </Stack>
