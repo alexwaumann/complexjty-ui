@@ -12,5 +12,5 @@ export const alchemyAccountsConfig = createConfig({
     },
     nodeRpcUrl: "http://127.0.0.1:8545",
   }),
-  sessionConfig: { storage: "localStorage" },
+  sessionConfig: { storage: "localStorage", expirationTimeMs: 1000 * 60 * 60 },
 });
