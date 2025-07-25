@@ -15,6 +15,7 @@ import { AccountButton } from "~/components/AccountButton";
 import { SignInButton } from "~/components/SignInButton";
 import { SignUpButton } from "~/components/SignUpButton";
 import { useAccount } from "~/hooks/account-kit/useAccount";
+import { WalletButton } from "./WalletButton";
 
 export function AppHeader() {
   const { account } = useAccount();
@@ -77,6 +78,7 @@ export function AppHeader() {
             <SignInButton />
           </>
         : <>
+            <WalletButton />
             <AccountButton />
           </>
         }
