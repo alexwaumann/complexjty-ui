@@ -26,6 +26,7 @@
     "@tanstack/react-query-devtools": "^5.80.7",
     "@tanstack/react-router": "^1.121.24",
     "@tanstack/react-router-devtools": "^1.121.24",
+    "alchemy-sdk": "^3.6.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "viem": "^2.29.2",
