@@ -1,11 +1,12 @@
 import CircleIcon from "@mui/icons-material/Circle";
-import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
+import CopyIcon from "@mui/icons-material/ContentCopyOutlined";
 import ShieldIcon from "@mui/icons-material/VerifiedUser";
 import WalletIcon from "@mui/icons-material/WalletOutlined";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import ButtonBase from "@mui/material/ButtonBase";
 import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
@@ -13,11 +14,14 @@ import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
+import { formatEther } from "viem";
+import { alchemySdk } from "~/config";
 import { useAccount } from "~/hooks/account-kit/useAccount";
 
 export function WalletButton() {
   const { account, address } = useAccount();
   const [isAccountDeployed, setIsAccountDeployed] = useState(false);
+  const [etherBalance, setEtherBalance] = useState(0);
 
   const [walletAnchor, setWalletAnchor] = useState<HTMLButtonElement | null>(
     null,
@@ -33,6 +37,19 @@ export function WalletButton() {
       .then((isDeployed) => setIsAccountDeployed(isDeployed))
       .catch(() => false);
   }, [account]);
+
+  useEffect(() => {
+    if (!address) {
+      return;
+    }
+
+    alchemySdk.core
+      .getBalance(address)
+      .then((balance) =>
+        setEtherBalance(Number(formatEther(balance.toBigInt()))),
+      )
+      .catch(() => null);
+  }, [address]);
 
   return (
     <>
@@ -73,28 +90,35 @@ export function WalletButton() {
         slotProps={{ paper: { sx: { mt: 1 } } }}
       >
         <Stack direction="column">
-          <Link
-            href={`https://testnet-explorer.optimism.io/address/${address}`}
-            target="_blank"
-            rel="noopenener"
-            underline="hover"
-          >
-            <Stack direction="row" alignItems="center" gap={1} padding={2}>
-              <Tooltip title={isAccountDeployed ? "Deployed" : "Not deployed"}>
-                <CircleIcon
-                  color={isAccountDeployed ? "success" : "warning"}
-                  sx={{ width: "8px", height: "8px" }}
-                />
-              </Tooltip>
-              <Typography color="primary" variant="caption">
-                {address}
-              </Typography>
-              <OpenIcon
+          <Stack direction="row" alignItems="center" gap={1} padding={2}>
+            <Tooltip title={isAccountDeployed ? "Deployed" : "Not deployed"}>
+              <CircleIcon
+                color={isAccountDeployed ? "success" : "warning"}
+                sx={{ width: "8px", height: "8px" }}
+              />
+            </Tooltip>
+            <Link
+              href={`https://testnet-explorer.optimism.io/address/${address}`}
+              target="_blank"
+              rel="noopenener"
+              underline="hover"
+              variant="caption"
+              color="textPrimary"
+            >
+              {address}
+            </Link>
+            <IconButton
+              onClick={() => {
+                navigator.clipboard.writeText(address ?? "").catch(() => null);
+              }}
+              sx={{ padding: 0 }}
+            >
+              <CopyIcon
                 color="primary"
                 sx={{ width: "12px", height: "12px" }}
               />
-            </Stack>
-          </Link>
+            </IconButton>
+          </Stack>
 
           <Divider />
 
@@ -141,7 +165,7 @@ export function WalletButton() {
                     sx={{ width: "28px", height: "28px" }}
                   />
                   <Stack direction="column" flexGrow={1}>
-                    <Typography variant="subtitle2">0</Typography>
+                    <Typography variant="subtitle2">{etherBalance}</Typography>
                     <Typography variant="caption">ETH</Typography>
                   </Stack>
                   <Typography variant="h6">$0.00</Typography>
