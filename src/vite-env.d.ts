@@ -6,6 +6,7 @@ interface ViteTypeOptions {
 
 interface ImportMetaEnv {
   readonly VITE_ALCHEMY_KEY: string;
+  readonly VITE_ALCHEMY_POLICY_ID: string;
 }
 
 interface ImportMeta {
