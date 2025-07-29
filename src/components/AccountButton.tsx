@@ -14,8 +14,10 @@ import Typography from "@mui/material/Typography";
 import { useState } from "react";
 
 import { Pfp } from "~/components/ui/Pfp";
+import { useSignOut } from "~/hooks/account-kit/useSignOut";
 
 export function AccountButton() {
+  const { signOut, isSigningOut } = useSignOut();
   const [accountAnchor, setAccountAnchor] = useState<HTMLButtonElement | null>(
     null,
   );
@@ -66,7 +68,7 @@ export function AccountButton() {
           </ListItem>
 
           <ListItem disablePadding>
-            <ListItemButton>
+            <ListItemButton disabled={isSigningOut} onClick={() => signOut()}>
               <ListItemIcon>
                 <SignOutIcon />
               </ListItemIcon>
