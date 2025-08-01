@@ -1,16 +1,14 @@
 import type { User } from "@account-kit/signer";
-import {
-  useMutation,
-  type UseMutateAsyncFunction,
-  type UseMutateFunction,
-} from "@tanstack/react-query";
+import { useMutation, type UseMutateFunction } from "@tanstack/react-query";
 import { useAccountKitContext } from "../useAccountKitContext";
 import { useSigner } from "./useSigner";
 
+export type SignInType = "google" | "passkey" | "newPasskey";
+
 export type UseSignInResult = {
-  signIn: UseMutateFunction<User, Error, void, unknown>;
-  signInAsync: UseMutateAsyncFunction<User, Error, void, unknown>;
+  signIn: UseMutateFunction<User, Error, SignInType, unknown>;
   isSigningIn: boolean;
+  signInType: SignInType | undefined;
   signInError: Error | null;
 };
 
@@ -20,20 +18,41 @@ export function useSignIn(): UseSignInResult {
 
   const {
     mutate: signIn,
-    mutateAsync: signInAsync,
     isPending: isSigningIn,
+    variables: signInType,
     error: signInError,
   } = useMutation(
     {
-      mutationFn: async () => {
+      mutationFn: async (signInType: SignInType) => {
         if (!signer) {
           throw new Error("useSignIn: No signer");
         }
 
-        return signer.authenticate({
-          type: "passkey",
-          createNew: false,
-        });
+        switch (signInType) {
+          case "google":
+            await signer.preparePopupOauth();
+            return signer.authenticate({
+              type: "oauth",
+              mode: "popup",
+              authProviderId: "google",
+            });
+
+          case "passkey":
+            return signer.authenticate({
+              type: "passkey",
+              createNew: false,
+            });
+
+          case "newPasskey":
+            return signer.authenticate({
+              type: "passkey",
+              createNew: true,
+              username: "anon",
+              //creationOpts: {
+              //  publicKey: { rp: { id: "complexjty.com", name: "Complexjty" } },
+              //},
+            });
+        }
       },
       mutationKey: ["signIn"],
     },
@@ -42,8 +61,8 @@ export function useSignIn(): UseSignInResult {
 
   return {
     signIn,
-    signInAsync,
     isSigningIn,
+    signInType,
     signInError,
   };
 }

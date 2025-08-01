@@ -13,7 +13,6 @@ import { useLocation, useNavigate } from "@tanstack/react-router";
 
 import { AccountButton } from "~/components/AccountButton";
 import { SignInButton } from "~/components/SignInButton";
-import { SignUpButton } from "~/components/SignUpButton";
 import { useAccount } from "~/hooks/account-kit/useAccount";
 import { WalletButton } from "./WalletButton";
 
@@ -73,10 +72,7 @@ export function AppHeader() {
 
       <Stack direction="row" spacing={1.5}>
         {!account ?
-          <>
-            <SignUpButton />
-            <SignInButton />
-          </>
+          <SignInButton />
         : <>
             <WalletButton />
             <AccountButton />
