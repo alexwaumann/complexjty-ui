@@ -45,7 +45,9 @@ export function AppHeader() {
           <ToggleButtonGroup
             exclusive
             value={page}
-            onChange={(_, value: string) => navigateToPage(`/${value}`)}
+            onChange={(_, value: string) =>
+              value && navigateToPage(`/${value}`)
+            }
             color="primary"
             sx={{ height: 56 }}
           >
