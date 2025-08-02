@@ -30,10 +30,10 @@ export function useSignIn(): UseSignInResult {
 
         switch (signInType) {
           case "google":
-            await signer.preparePopupOauth();
             return signer.authenticate({
               type: "oauth",
-              mode: "popup",
+              mode: "redirect",
+              redirectUrl: window.location.href,
               authProviderId: "google",
             });
 
