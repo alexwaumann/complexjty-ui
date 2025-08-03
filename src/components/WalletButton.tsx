@@ -17,11 +17,17 @@ import { useEffect, useState } from "react";
 import { formatEther } from "viem";
 import { alchemySdk } from "~/config";
 import { useAccount } from "~/hooks/account-kit/useAccount";
+import { useUser } from "~/hooks/account-kit/useUser";
+import { formatKey } from "~/utils/common";
 
+// TODO: secured by passkey and/or google oauth depending on auth details
 export function WalletButton() {
+  const user = useUser();
   const { account, address } = useAccount();
   const [isAccountDeployed, setIsAccountDeployed] = useState(false);
   const [etherBalance, setEtherBalance] = useState(0);
+
+  const isPasskeySigner = Boolean(user?.credentialId);
 
   const [walletAnchor, setWalletAnchor] = useState<HTMLButtonElement | null>(
     null,
@@ -72,7 +78,7 @@ export function WalletButton() {
           >
             <WalletIcon color="primary" />
             <Typography variant="subtitle1" color="primary">
-              anon
+              {address && formatKey(address)}
             </Typography>
             <Typography variant="subtitle1" color="primary">
               $0.00
@@ -191,7 +197,9 @@ export function WalletButton() {
               color="success"
               sx={{ width: "16px", height: "16px" }}
             />
-            <Typography variant="caption">Secured by passkey</Typography>
+            <Typography variant="caption">
+              Secured by {isPasskeySigner ? "Passkey" : "Google OAuth"}
+            </Typography>
           </Stack>
         </Stack>
       </Popover>
