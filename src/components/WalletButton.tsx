@@ -78,9 +78,6 @@ export function WalletButton() {
           >
             <WalletIcon color="primary" />
             <Typography variant="subtitle1" color="primary">
-              {address && formatKey(address)}
-            </Typography>
-            <Typography variant="subtitle1" color="primary">
               $0.00
             </Typography>
           </Stack>
