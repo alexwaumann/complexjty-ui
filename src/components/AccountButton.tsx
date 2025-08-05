@@ -1,10 +1,8 @@
 import AddIcon from "@mui/icons-material/AddOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import ExportIcon from "@mui/icons-material/DownloadOutlined";
 import GoogleIcon from "@mui/icons-material/Google";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import PasskeyIcon from "@mui/icons-material/Key";
-import LoginIcon from "@mui/icons-material/LoginOutlined";
 import Button from "@mui/material/Button";
 import ButtonBase from "@mui/material/ButtonBase";
 import Divider from "@mui/material/Divider";
@@ -16,12 +14,16 @@ import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { Pfp } from "~/components/ui/Pfp";
 import { useAccount } from "~/hooks/account-kit/useAccount";
+import { useAddPasskey } from "~/hooks/account-kit/useAddPasskey";
 import { useGetAuthMethods } from "~/hooks/account-kit/useGetAuthMethods";
+import { useRemovePasskey } from "~/hooks/account-kit/useRemovePasskey";
 import { useSignOut } from "~/hooks/account-kit/useSignOut";
 import { formatKey } from "~/utils/common";
 
 export function AccountButton() {
-  const { googleOauthInfo, passkeyAuthInfo } = useGetAuthMethods();
+  const { authMethods } = useGetAuthMethods();
+  const { addPasskey, isAddingPasskey } = useAddPasskey();
+  const { removePasskey, isRemovingPasskey } = useRemovePasskey();
   const { address } = useAccount();
   const { signOut, isSigningOut } = useSignOut();
   const [accountAnchor, setAccountAnchor] = useState<HTMLButtonElement | null>(
@@ -66,7 +68,10 @@ export function AccountButton() {
             <Typography variant="subtitle2" color="textSecondary">
               Manage Account
             </Typography>
-            <Tooltip title="Your wallet can be controlled by either your google account signer or your passkey signer. Passkey-only accounts risk losing account access if the passkey is lost.">
+            <Tooltip
+              title="Your account can be accessed by authenticating with your google account or your passkey. Passkey-only accounts risk losing account access if the passkey is lost."
+              disableInteractive
+            >
               <InfoOutlined
                 color="action"
                 sx={{ width: "16px", height: "16px" }}
@@ -75,44 +80,26 @@ export function AccountButton() {
           </Stack>
 
           <Stack direction="row" spacing={3} alignItems="center">
-            <GoogleIcon
-              color={googleOauthInfo.active ? "primary" : "inherit"}
-            />
+            <GoogleIcon />
             <Stack direction="column" flexGrow={1}>
-              <Typography
-                variant="body2"
-                color={googleOauthInfo.active ? "primary" : "inherit"}
-              >
-                {googleOauthInfo.email ?? "N/A"}
+              <Typography variant="body2">
+                {authMethods?.googleEmail ?? "N/A"}
               </Typography>
               <Typography variant="caption" color="textSecondary">
-                Google Account Signer
+                Google Account
               </Typography>
             </Stack>
             <Stack direction="row" alignItems="center">
-              {googleOauthInfo.email && googleOauthInfo.active && (
-                <Tooltip title="Export private key">
-                  <IconButton color="primary">
-                    <ExportIcon />
-                  </IconButton>
-                </Tooltip>
-              )}
-              {googleOauthInfo.email && !googleOauthInfo.active && (
-                <>
-                  <Tooltip title="Switch to google account signer">
-                    <IconButton color="primary">
-                      <LoginIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Delete google account signer">
+              {authMethods?.googleEmail &&
+                authMethods?.passkeyAuthenticatorId && (
+                  <Tooltip title="Remove google account">
                     <IconButton color="error">
                       <DeleteIcon />
                     </IconButton>
                   </Tooltip>
-                </>
-              )}
-              {!googleOauthInfo.email && (
-                <Tooltip title="Add google account signer">
+                )}
+              {!authMethods?.googleEmail && (
+                <Tooltip title="Add google account">
                   <IconButton color="primary">
                     <AddIcon />
                   </IconButton>
@@ -122,47 +109,39 @@ export function AccountButton() {
           </Stack>
 
           <Stack direction="row" spacing={3} alignItems="center">
-            <PasskeyIcon
-              color={passkeyAuthInfo.active ? "primary" : "inherit"}
-            />
+            <PasskeyIcon />
             <Stack direction="column" flexGrow={1}>
-              <Typography
-                variant="body2"
-                color={passkeyAuthInfo.active ? "primary" : "inherit"}
-              >
-                {(passkeyAuthInfo.authenticatorId &&
-                  formatKey(passkeyAuthInfo.authenticatorId)) ??
+              <Typography variant="body2">
+                {(authMethods?.passkeyAuthenticatorId &&
+                  formatKey(authMethods.passkeyAuthenticatorId)) ??
                   "N/A"}
               </Typography>
               <Typography variant="caption" color="textSecondary">
-                Passkey Signer
+                Passkey
               </Typography>
             </Stack>
             <Stack direction="row" alignItems="center">
-              {passkeyAuthInfo.authenticatorId && passkeyAuthInfo.active && (
-                <Tooltip title="Export private key">
-                  <IconButton color="primary">
-                    <ExportIcon />
-                  </IconButton>
-                </Tooltip>
-              )}
-              {passkeyAuthInfo.authenticatorId && !passkeyAuthInfo.active && (
-                <>
-                  <Tooltip title="Switch to passkey signer">
-                    <IconButton color="primary">
-                      <LoginIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Delete passkey signer">
-                    <IconButton color="error">
+              {authMethods?.passkeyAuthenticatorId &&
+                authMethods.googleEmail && (
+                  <Tooltip title="Remove passkey">
+                    <IconButton
+                      loading={isRemovingPasskey}
+                      onClick={() =>
+                        removePasskey(authMethods.passkeyAuthenticatorId)
+                      }
+                      color="error"
+                    >
                       <DeleteIcon />
                     </IconButton>
                   </Tooltip>
-                </>
-              )}
-              {!passkeyAuthInfo.authenticatorId && (
-                <Tooltip title="Add passkey signer">
-                  <IconButton color="primary">
+                )}
+              {!authMethods?.passkeyAuthenticatorId && (
+                <Tooltip title="Add passkey">
+                  <IconButton
+                    loading={isAddingPasskey}
+                    onClick={() => addPasskey()}
+                    color="primary"
+                  >
                     <AddIcon />
                   </IconButton>
                 </Tooltip>

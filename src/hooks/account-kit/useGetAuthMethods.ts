@@ -18,24 +18,18 @@ export function useGetAuthMethods() {
           throw Error("useListAuthMethods: no signer connected");
         }
 
-        return signer.listAuthMethods();
+        const authMethods = await signer.listAuthMethods();
+        return {
+          googleEmail:
+            authMethods.oauthProviders[0]?.userDisplayName ?? undefined,
+          passkeyAuthenticatorId:
+            authMethods.passkeys[0]?.authenticatorId ?? undefined,
+        };
       },
       enabled: !!user && !!signer && isSignerConnected,
     },
     queryClient,
   );
 
-  const googleOauthInfo = {
-    active: Boolean(user?.email),
-    email: authMethods?.oauthProviders[0]?.userDisplayName,
-  };
-
-  // TODO: why doesn't authMethod passkey info have credentialId?
-  const passkeyAuthInfo = {
-    active: Boolean(user?.credentialId),
-    authenticatorId: authMethods?.passkeys[0]?.authenticatorId,
-    credentialId: user?.credentialId,
-  };
-
-  return { googleOauthInfo, passkeyAuthInfo, getAuthMethodsError };
+  return { authMethods, getAuthMethodsError };
 }
