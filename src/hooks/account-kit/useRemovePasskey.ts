@@ -23,7 +23,8 @@ export function useRemovePasskey(): UseRemovePasskeyResult {
           throw new Error("useRemovePasskey: No signer");
         }
 
-        return signer.removePasskey(authenticatorId);
+        await signer.removePasskey(authenticatorId);
+        await queryClient.invalidateQueries({ queryKey: ["get-auth-methods"] });
       },
       mutationKey: ["removePasskey"],
     },

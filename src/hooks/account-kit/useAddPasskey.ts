@@ -23,7 +23,10 @@ export function useAddPasskey(): UseAddPasskeyResult {
           throw new Error("useAddPasskey: No signer");
         }
 
-        return signer.addPasskey();
+        const authenticatorIds = await signer.addPasskey();
+        await queryClient.invalidateQueries({ queryKey: ["get-auth-methods"] });
+
+        return authenticatorIds;
       },
       mutationKey: ["addPasskey"],
     },
