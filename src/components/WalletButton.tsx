@@ -18,7 +18,6 @@ import { formatEther } from "viem";
 import { alchemySdk } from "~/config";
 import { useAccount } from "~/hooks/account-kit/useAccount";
 import { useUser } from "~/hooks/account-kit/useUser";
-import { formatKey } from "~/utils/common";
 
 // TODO: secured by passkey and/or google oauth depending on auth details
 export function WalletButton() {
