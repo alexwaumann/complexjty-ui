@@ -15,18 +15,20 @@ import { useLocation, useNavigate } from "@tanstack/react-router";
 import { AccountButton } from "~/components/AccountButton";
 import { SignInButton } from "~/components/SignInButton";
 import { WalletButton } from "~/components/WalletButton";
-import { useAccount } from "~/hooks/account-kit/useAccount";
+import { useSignerStatus } from "~/hooks/account-kit/useSignerStatus";
 
 export function AppHeader() {
-  const { account } = useAccount();
+  const { isConnected: hasSigner } = useSignerStatus();
+
   const navigate = useNavigate();
   const page = useLocation({
     select: (location) => location.pathname.split("/")[1] ?? "",
   });
+
   const theme = useTheme();
   const isPhoneScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  // TODO: create custome navItem that utilizes custom tanstack Link
+  // TODO: create custom navItem that utilizes custom tanstack Link
   function navigateToPage(newPage: string) {
     if (newPage === page) {
       return;
@@ -78,7 +80,7 @@ export function AppHeader() {
       <Box sx={{ flexGrow: 1 }} />
 
       <Stack direction="row" spacing={1.5}>
-        {!account ?
+        {!hasSigner ?
           <SignInButton />
         : <>
             <WalletButton />
