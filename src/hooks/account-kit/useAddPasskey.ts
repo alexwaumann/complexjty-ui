@@ -19,10 +19,6 @@ export function useAddPasskey(): UseAddPasskeyResult {
   } = useMutation(
     {
       mutationFn: async () => {
-        if (!signer) {
-          throw new Error("useAddPasskey: No signer");
-        }
-
         const authenticatorIds = await signer.addPasskey();
         await queryClient.invalidateQueries({ queryKey: ["get-auth-methods"] });
 

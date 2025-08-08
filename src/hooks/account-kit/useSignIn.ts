@@ -24,10 +24,6 @@ export function useSignIn(): UseSignInResult {
   } = useMutation(
     {
       mutationFn: async (signInType: SignInType) => {
-        if (!signer) {
-          throw new Error("useSignIn: No signer");
-        }
-
         switch (signInType) {
           case "passkey":
             return signer.authenticate({

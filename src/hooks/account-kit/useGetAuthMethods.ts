@@ -14,7 +14,7 @@ export function useGetAuthMethods() {
     {
       queryKey: ["get-auth-methods", user?.orgId],
       queryFn: async () => {
-        if (!signer || !isSignerConnected) {
+        if (!isSignerConnected) {
           throw Error("useListAuthMethods: no signer connected");
         }
 

@@ -19,10 +19,6 @@ export function useRemovePasskey(): UseRemovePasskeyResult {
   } = useMutation(
     {
       mutationFn: async (authenticatorId: string) => {
-        if (!signer) {
-          throw new Error("useRemovePasskey: No signer");
-        }
-
         await signer.removePasskey(authenticatorId);
         await queryClient.invalidateQueries({ queryKey: ["get-auth-methods"] });
       },
