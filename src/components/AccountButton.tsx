@@ -1,6 +1,6 @@
 import AddIcon from "@mui/icons-material/AddOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import GoogleIcon from "@mui/icons-material/Google";
+import EmailIcon from "@mui/icons-material/EmailOutlined";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import PasskeyIcon from "@mui/icons-material/Key";
 import Button from "@mui/material/Button";
@@ -14,7 +14,7 @@ import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { Pfp } from "~/components/ui/Pfp";
 import { useAccount } from "~/hooks/account-kit/useAccount";
-import { useAddPasskey } from "~/hooks/account-kit/useAddPasskey";
+//import { useAddPasskey } from "~/hooks/account-kit/useAddPasskey";
 import { useGetAuthMethods } from "~/hooks/account-kit/useGetAuthMethods";
 import { useRemovePasskey } from "~/hooks/account-kit/useRemovePasskey";
 import { useSignOut } from "~/hooks/account-kit/useSignOut";
@@ -22,7 +22,7 @@ import { formatKey } from "~/utils/common";
 
 export function AccountButton() {
   const { authMethods } = useGetAuthMethods();
-  const { addPasskey, isAddingPasskey } = useAddPasskey();
+  //const { addPasskey, isAddingPasskey } = useAddPasskey();
   const { removePasskey, isRemovingPasskey } = useRemovePasskey();
   const { address } = useAccount();
   const { signOut, isSigningOut } = useSignOut();
@@ -64,91 +64,100 @@ export function AccountButton() {
             direction="row"
             alignItems="center"
             justifyContent="space-between"
+            paddingRight={1.5}
           >
             <Typography variant="subtitle2" color="textSecondary">
               Manage Account
             </Typography>
-            <Tooltip
-              title="Your account can be accessed by authenticating with your google account or your passkey. Passkey-only accounts risk losing account access if the passkey is lost."
-              disableInteractive
+            {!authMethods?.recoveryEmail && (
+              <Tooltip
+                title="Accounts with no recovery email risk losing account access if the passkey is lost."
+                disableInteractive
+              >
+                <InfoOutlined
+                  color="action"
+                  sx={{ width: "16px", height: "16px" }}
+                />
+              </Tooltip>
+            )}
+          </Stack>
+
+          {authMethods?.passkeys.map((passkeyInfo, index) => (
+            <Stack
+              direction="row"
+              spacing={3}
+              alignItems="center"
+              key={passkeyInfo.authenticatorId}
             >
-              <InfoOutlined
-                color="action"
-                sx={{ width: "16px", height: "16px" }}
-              />
-            </Tooltip>
-          </Stack>
-
-          <Stack direction="row" spacing={3} alignItems="center">
-            <GoogleIcon />
-            <Stack direction="column" flexGrow={1}>
-              <Typography variant="body2">
-                {authMethods?.googleEmail ?? "N/A"}
-              </Typography>
-              <Typography variant="caption" color="textSecondary">
-                Google Account
-              </Typography>
-            </Stack>
-            <Stack direction="row" alignItems="center">
-              {authMethods?.googleEmail &&
-                authMethods?.passkeyAuthenticatorId && (
-                  <Tooltip title="Remove google account">
-                    <IconButton color="error">
-                      <DeleteIcon />
-                    </IconButton>
-                  </Tooltip>
-                )}
-              {!authMethods?.googleEmail && (
-                <Tooltip title="Add google account">
-                  <IconButton color="primary">
-                    <AddIcon />
-                  </IconButton>
-                </Tooltip>
-              )}
-            </Stack>
-          </Stack>
-
-          <Stack direction="row" spacing={3} alignItems="center">
-            <PasskeyIcon />
-            <Stack direction="column" flexGrow={1}>
-              <Typography variant="body2">
-                {(authMethods?.passkeyAuthenticatorId &&
-                  formatKey(authMethods.passkeyAuthenticatorId)) ??
-                  "N/A"}
-              </Typography>
-              <Typography variant="caption" color="textSecondary">
-                Passkey
-              </Typography>
-            </Stack>
-            <Stack direction="row" alignItems="center">
-              {authMethods?.passkeyAuthenticatorId &&
-                authMethods.googleEmail && (
+              <PasskeyIcon />
+              <Stack direction="column" flexGrow={1}>
+                <Typography variant="body2">{passkeyInfo.name}</Typography>
+                <Typography variant="caption" color="textSecondary">
+                  Passkey {index + 1}
+                </Typography>
+              </Stack>
+              <Stack direction="row" alignItems="center">
+                {/* TODO: re-enable once we have a better multi-passkey ux
+                          (ex. delete loading spinner only on passkey being deleted)
+                authMethods.passkeys.length < 3 &&
+                  authMethods.passkeys.length - 1 === index && (
+                    <Tooltip title="Add passkey">
+                      <IconButton
+                        loading={isAddingPasskey}
+                        onClick={() => addPasskey()}
+                        color="primary"
+                      >
+                        <AddIcon />
+                      </IconButton>
+                    </Tooltip>
+                  )*/}
+                {authMethods.passkeys.length > 1 && (
                   <Tooltip title="Remove passkey">
                     <IconButton
                       loading={isRemovingPasskey}
-                      onClick={() =>
-                        removePasskey(authMethods.passkeyAuthenticatorId)
-                      }
+                      onClick={() => removePasskey(passkeyInfo.authenticatorId)}
                       color="error"
                     >
                       <DeleteIcon />
                     </IconButton>
                   </Tooltip>
                 )}
-              {!authMethods?.passkeyAuthenticatorId && (
-                <Tooltip title="Add passkey">
-                  <IconButton
-                    loading={isAddingPasskey}
-                    onClick={() => addPasskey()}
-                    color="primary"
-                  >
+              </Stack>
+            </Stack>
+          ))}
+
+          <Stack direction="row" spacing={3} alignItems="center">
+            <EmailIcon color="disabled" />
+            <Stack direction="column" flexGrow={1}>
+              <Typography color="textDisabled" variant="body2">
+                {authMethods?.recoveryEmail ?? "N/A"}
+              </Typography>
+              <Typography variant="caption" color="textSecondary">
+                Recovery Email
+              </Typography>
+            </Stack>
+            <Stack direction="row" alignItems="center">
+              {authMethods?.recoveryEmail && (
+                <Tooltip title="Remove recovery email">
+                  <IconButton color="error">
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
+              {!authMethods?.recoveryEmail && (
+                <Tooltip title="Add recovery email">
+                  <IconButton disabled color="primary">
                     <AddIcon />
                   </IconButton>
                 </Tooltip>
               )}
             </Stack>
           </Stack>
+        </Stack>
 
+        <Divider />
+
+        <Stack direction="column" spacing={2} m={2}>
           <Button disabled={isSigningOut} onClick={() => signOut()} fullWidth>
             Sign out
           </Button>

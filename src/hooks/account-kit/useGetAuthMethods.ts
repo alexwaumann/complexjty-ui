@@ -20,10 +20,8 @@ export function useGetAuthMethods() {
 
         const authMethods = await signer.listAuthMethods();
         return {
-          googleEmail:
-            authMethods.oauthProviders[0]?.userDisplayName ?? undefined,
-          passkeyAuthenticatorId:
-            authMethods.passkeys[0]?.authenticatorId ?? undefined,
+          passkeys: authMethods.passkeys,
+          recoveryEmail: authMethods.email,
         };
       },
       enabled: !!user && !!signer && isSignerConnected,

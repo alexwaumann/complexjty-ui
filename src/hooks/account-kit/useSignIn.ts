@@ -3,7 +3,7 @@ import { useMutation, type UseMutateFunction } from "@tanstack/react-query";
 import { useAccountKitContext } from "../useAccountKitContext";
 import { useSigner } from "./useSigner";
 
-export type SignInType = "google" | "passkey" | "newPasskey";
+export type SignInType = "passkey" | "newPasskey";
 
 export type UseSignInResult = {
   signIn: UseMutateFunction<User, Error, SignInType, unknown>;
@@ -29,14 +29,6 @@ export function useSignIn(): UseSignInResult {
         }
 
         switch (signInType) {
-          case "google":
-            return signer.authenticate({
-              type: "oauth",
-              mode: "redirect",
-              redirectUrl: window.location.href,
-              authProviderId: "google",
-            });
-
           case "passkey":
             return signer.authenticate({
               type: "passkey",
