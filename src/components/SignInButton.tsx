@@ -7,10 +7,12 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { useSignIn } from "~/hooks/account-kit/useSignIn";
+import { PasskeySyncDialog } from "./dialogs/PasskeySyncDialog";
 
 // TODO: should not be able to close popover during isSigningIn or isSigningUp
 export function SignInButton() {
   const { signIn, isSigningIn, signInType } = useSignIn();
+  const [isPasskeySyncDialogOpen, setIsPasskeySyncDialogOpen] = useState(false);
 
   const [signInPopoverAnchor, setSignInPopoverAnchor] =
     useState<HTMLElement | null>(null);
@@ -33,7 +35,7 @@ export function SignInButton() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         slotProps={{
-          paper: { sx: { mt: 1, p: 2 } },
+          paper: { sx: { mt: 1, p: 2, minWidth: "320px" } },
         }}
       >
         <Stack
@@ -57,6 +59,17 @@ export function SignInButton() {
           >
             Sign in with Passkey
           </Button>
+
+          <Typography variant="caption" color="textSecondary">
+            Don't see your passkey?{" "}
+            <Link
+              component="button"
+              variant="caption"
+              onClick={() => setIsPasskeySyncDialogOpen(true)}
+            >
+              Learn how to sync
+            </Link>
+          </Typography>
 
           <Divider flexItem>
             <Typography variant="caption">OR</Typography>
@@ -89,6 +102,10 @@ export function SignInButton() {
           </Typography>
         </Stack>
       </Popover>
+      <PasskeySyncDialog
+        open={isPasskeySyncDialogOpen}
+        onClose={() => setIsPasskeySyncDialogOpen(false)}
+      />
     </>
   );
 }
