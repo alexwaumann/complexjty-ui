@@ -1,6 +1,6 @@
 import { useMutation, type UseMutateFunction } from "@tanstack/react-query";
-import { useAccountKitContext } from "../useAccountKitContext";
-import { useSigner } from "./useSigner";
+import { queryClient } from "~/config";
+import { useSigner } from "~/store/accountKitStore";
 
 export type UseRemovePasskeyResult = {
   removePasskey: UseMutateFunction<void, Error, string, unknown>;
@@ -9,7 +9,6 @@ export type UseRemovePasskeyResult = {
 };
 
 export function useRemovePasskey(): UseRemovePasskeyResult {
-  const { queryClient } = useAccountKitContext();
   const signer = useSigner();
 
   const {
@@ -19,6 +18,9 @@ export function useRemovePasskey(): UseRemovePasskeyResult {
   } = useMutation(
     {
       mutationFn: async (authenticatorId: string) => {
+        if (!signer) {
+          throw new Error("Signer not initialized");
+        }
         await signer.removePasskey(authenticatorId);
         await queryClient.invalidateQueries({ queryKey: ["get-auth-methods"] });
       },

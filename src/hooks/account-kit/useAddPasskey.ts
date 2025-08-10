@@ -1,6 +1,6 @@
 import { useMutation, type UseMutateFunction } from "@tanstack/react-query";
-import { useSigner } from "./useSigner";
-import { useAccountKitContext } from "../useAccountKitContext";
+import { queryClient } from "~/config";
+import { useSigner } from "~/store/accountKitStore";
 
 export type UseAddPasskeyResult = {
   addPasskey: UseMutateFunction<string[], Error, void, unknown>;
@@ -9,7 +9,6 @@ export type UseAddPasskeyResult = {
 };
 
 export function useAddPasskey(): UseAddPasskeyResult {
-  const { queryClient } = useAccountKitContext();
   const signer = useSigner();
 
   const {
@@ -19,6 +18,9 @@ export function useAddPasskey(): UseAddPasskeyResult {
   } = useMutation(
     {
       mutationFn: async () => {
+        if (!signer) {
+          throw new Error("Signer not initialized");
+        }
         const authenticatorIds = await signer.addPasskey();
         await queryClient.invalidateQueries({ queryKey: ["get-auth-methods"] });
 

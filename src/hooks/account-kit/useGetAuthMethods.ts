@@ -1,11 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { useAccountKitContext } from "../useAccountKitContext";
-import { useSigner } from "./useSigner";
-import { useUser } from "./useUser";
-import { useSignerStatus } from "./useSignerStatus";
+import { queryClient } from "~/config";
+import { useSigner, useSignerStatus, useUser } from "~/store/accountKitStore";
 
 export function useGetAuthMethods() {
-  const { queryClient } = useAccountKitContext();
   const user = useUser();
   const signer = useSigner();
   const { isConnected: isSignerConnected } = useSignerStatus();
@@ -14,7 +11,7 @@ export function useGetAuthMethods() {
     {
       queryKey: ["get-auth-methods", user?.orgId],
       queryFn: async () => {
-        if (!isSignerConnected) {
+        if (!isSignerConnected || !signer) {
           throw Error("useListAuthMethods: no signer connected");
         }
 

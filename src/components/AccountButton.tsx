@@ -14,9 +14,9 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { Pfp } from "~/components/ui/Pfp";
-import { useAccount } from "~/hooks/account-kit/useAccount";
 import { useGetAuthMethods } from "~/hooks/account-kit/useGetAuthMethods";
 import { useSignOut } from "~/hooks/account-kit/useSignOut";
+import { useAccount } from "~/store/accountKitStore";
 import { formatKey } from "~/utils/common";
 
 export function AccountButton() {

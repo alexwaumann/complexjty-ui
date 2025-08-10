@@ -1,22 +1,26 @@
 import ThemeProvider from "@mui/system/ThemeProvider";
 import { QueryClientProvider } from "@tanstack/react-query";
-import type React from "react";
+import React, { useEffect } from "react";
 
-import { alchemyAccountsConfig, queryClient } from "~/config";
+import { queryClient } from "~/config";
+import { useAccountKitStore } from "~/store/accountKitStore";
 import { theme } from "~/theme";
-import { AccountKitProvider } from "./AccountKitProvider";
 
 export function Providers(props: React.PropsWithChildren) {
   const { children } = props;
+  const initializeAccountKit = useAccountKitStore((state) => state.initialize);
+
+  useEffect(() => {
+    const unwatch = initializeAccountKit();
+
+    return () => {
+      unwatch();
+    };
+  }, [initializeAccountKit]);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AccountKitProvider
-        config={alchemyAccountsConfig}
-        queryClient={queryClient}
-      >
-        <ThemeProvider theme={theme}>{children}</ThemeProvider>
-      </AccountKitProvider>
+      <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </QueryClientProvider>
   );
 }

@@ -15,7 +15,7 @@ import { useLocation, useNavigate } from "@tanstack/react-router";
 import { AccountButton } from "~/components/AccountButton";
 import { SignInButton } from "~/components/SignInButton";
 import { WalletButton } from "~/components/WalletButton";
-import { useSignerStatus } from "~/hooks/account-kit/useSignerStatus";
+import { useSignerStatus } from "~/store/accountKitStore";
 
 export function AppHeader() {
   const { isConnected: hasSigner } = useSignerStatus();

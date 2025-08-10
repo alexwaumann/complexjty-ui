@@ -1,6 +1,6 @@
 import { disconnect } from "@account-kit/core";
 import { useMutation, type UseMutateFunction } from "@tanstack/react-query";
-import { useAccountKitContext } from "../useAccountKitContext";
+import { alchemyAccountsConfig, queryClient } from "~/config";
 
 export type UseSignOutResult = {
   signOut: UseMutateFunction<void, Error, void, unknown>;
@@ -9,8 +9,6 @@ export type UseSignOutResult = {
 };
 
 export function useSignOut(): UseSignOutResult {
-  const { alchemyAccountsConfig, queryClient } = useAccountKitContext();
-
   const {
     mutate: signOut,
     isPending: isSigningOut,

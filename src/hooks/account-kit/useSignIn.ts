@@ -1,7 +1,7 @@
-import type { User } from "@account-kit/signer";
 import { useMutation, type UseMutateFunction } from "@tanstack/react-query";
-import { useAccountKitContext } from "../useAccountKitContext";
-import { useSigner } from "./useSigner";
+import { queryClient } from "~/config";
+import { useSigner } from "~/store/accountKitStore";
+import type { User } from "@account-kit/core";
 
 export type SignInType = "passkey" | "newPasskey";
 
@@ -13,7 +13,6 @@ export type UseSignInResult = {
 };
 
 export function useSignIn(): UseSignInResult {
-  const { queryClient } = useAccountKitContext();
   const signer = useSigner();
 
   const {
@@ -24,6 +23,9 @@ export function useSignIn(): UseSignInResult {
   } = useMutation(
     {
       mutationFn: async (signInType: SignInType) => {
+        if (!signer) {
+          throw new Error("Signer not initialized");
+        }
         const username = `initial-passkey - ${new Date().toLocaleString()}`;
         switch (signInType) {
           case "passkey":
@@ -50,7 +52,7 @@ export function useSignIn(): UseSignInResult {
       },
       mutationKey: ["signIn"],
     },
-    queryClient,
+    queryClient
   );
 
   return {

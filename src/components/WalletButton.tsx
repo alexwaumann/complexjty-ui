@@ -16,8 +16,7 @@ import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import { formatEther } from "viem";
 import { alchemySdk } from "~/config";
-import { useAccount } from "~/hooks/account-kit/useAccount";
-import { useUser } from "~/hooks/account-kit/useUser";
+import { useAccount, useUser } from "~/store/accountKitStore";
 
 // TODO: secured by passkey and/or google oauth depending on auth details
 export function WalletButton() {
