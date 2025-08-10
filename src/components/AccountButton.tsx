@@ -9,6 +9,7 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Popover from "@mui/material/Popover";
 import Stack from "@mui/material/Stack";
+import { useTheme } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
@@ -26,6 +27,7 @@ export function AccountButton() {
   const { removePasskey, isRemovingPasskey } = useRemovePasskey();
   const { address } = useAccount();
   const { signOut, isSigningOut } = useSignOut();
+  const theme = useTheme();
   const [accountAnchor, setAccountAnchor] = useState<HTMLButtonElement | null>(
     null,
   );
@@ -45,7 +47,17 @@ export function AccountButton() {
         anchorEl={accountAnchor}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-        slotProps={{ paper: { sx: { width: "364px", mt: 1 } } }}
+        slotProps={{
+          paper: {
+            sx: {
+              width: "364px",
+              mt: 1,
+              [theme.breakpoints.down("sm")]: {
+                width: "100%",
+              },
+            },
+          },
+        }}
       >
         <Stack direction="column" alignItems="center" spacing={1} mt={3} mb={2}>
           <Pfp size={128} />
