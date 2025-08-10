@@ -4,16 +4,17 @@ import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import Popover from "@mui/material/Popover";
 import Stack from "@mui/material/Stack";
+import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { useSignIn } from "~/hooks/account-kit/useSignIn";
 import { PasskeySyncDialog } from "./dialogs/PasskeySyncDialog";
 
-// TODO: should not be able to close popover during isSigningIn or isSigningUp
 export function SignInButton() {
   const { signIn, isSigningIn, signInType } = useSignIn();
-  const [isPasskeySyncDialogOpen, setIsPasskeySyncDialogOpen] = useState(false);
+  const theme = useTheme();
 
+  const [isPasskeySyncDialogOpen, setIsPasskeySyncDialogOpen] = useState(false);
   const [signInPopoverAnchor, setSignInPopoverAnchor] =
     useState<HTMLElement | null>(null);
   const isPopoverOpen = Boolean(signInPopoverAnchor);
@@ -35,7 +36,17 @@ export function SignInButton() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         slotProps={{
-          paper: { sx: { mt: 1, p: 2, minWidth: "320px" } },
+          paper: {
+            sx: {
+              mt: 2,
+              p: 2,
+              minWidth: "320px",
+              [theme.breakpoints.down("sm")]: {
+                width: "100%",
+              },
+            },
+          },
+          backdrop: { invisible: false },
         }}
       >
         <Stack
