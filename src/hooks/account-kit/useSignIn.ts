@@ -24,6 +24,7 @@ export function useSignIn(): UseSignInResult {
   } = useMutation(
     {
       mutationFn: async (signInType: SignInType) => {
+        const username = `initial-passkey - ${new Date().toLocaleString()}`;
         switch (signInType) {
           case "passkey":
             return signer.authenticate({
@@ -35,10 +36,15 @@ export function useSignIn(): UseSignInResult {
             return signer.authenticate({
               type: "passkey",
               createNew: true,
-              username: "anon",
-              //creationOpts: {
-              //  publicKey: { rp: { id: "complexjty.com", name: "Complexjty" } },
-              //},
+              username,
+              creationOpts: {
+                publicKey: {
+                  rp: {
+                    id: import.meta.env.DEV ? "localhost" : "complexjty.com",
+                    name: "Complexjty",
+                  },
+                },
+              },
             });
         }
       },
