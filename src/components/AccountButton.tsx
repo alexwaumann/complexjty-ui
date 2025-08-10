@@ -15,16 +15,12 @@ import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { Pfp } from "~/components/ui/Pfp";
 import { useAccount } from "~/hooks/account-kit/useAccount";
-//import { useAddPasskey } from "~/hooks/account-kit/useAddPasskey";
 import { useGetAuthMethods } from "~/hooks/account-kit/useGetAuthMethods";
-import { useRemovePasskey } from "~/hooks/account-kit/useRemovePasskey";
 import { useSignOut } from "~/hooks/account-kit/useSignOut";
 import { formatKey } from "~/utils/common";
 
 export function AccountButton() {
   const { authMethods } = useGetAuthMethods();
-  //const { addPasskey, isAddingPasskey } = useAddPasskey();
-  const { removePasskey, isRemovingPasskey } = useRemovePasskey();
   const { address } = useAccount();
   const { signOut, isSigningOut } = useSignOut();
   const theme = useTheme();
@@ -94,7 +90,7 @@ export function AccountButton() {
             )}
           </Stack>
 
-          {authMethods?.passkeys.map((passkeyInfo, index) => (
+          {authMethods?.passkeys.map((passkeyInfo) => (
             <Stack
               direction="row"
               spacing={3}
@@ -105,35 +101,8 @@ export function AccountButton() {
               <Stack direction="column" flexGrow={1}>
                 <Typography variant="body2">{passkeyInfo.name}</Typography>
                 <Typography variant="caption" color="textSecondary">
-                  Passkey {index + 1}
+                  Passkey
                 </Typography>
-              </Stack>
-              <Stack direction="row" alignItems="center">
-                {/* TODO: re-enable once we have a better multi-passkey ux
-                          (ex. delete loading spinner only on passkey being deleted)
-                authMethods.passkeys.length < 3 &&
-                  authMethods.passkeys.length - 1 === index && (
-                    <Tooltip title="Add passkey">
-                      <IconButton
-                        loading={isAddingPasskey}
-                        onClick={() => addPasskey()}
-                        color="primary"
-                      >
-                        <AddIcon />
-                      </IconButton>
-                    </Tooltip>
-                  )*/}
-                {authMethods.passkeys.length > 1 && (
-                  <Tooltip title="Remove passkey">
-                    <IconButton
-                      loading={isRemovingPasskey}
-                      onClick={() => removePasskey(passkeyInfo.authenticatorId)}
-                      color="error"
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </Tooltip>
-                )}
               </Stack>
             </Stack>
           ))}
