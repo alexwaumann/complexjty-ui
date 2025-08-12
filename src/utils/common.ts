@@ -8,3 +8,7 @@ export function formatKey(
 
   return `${prefix}...${suffix}`;
 }
+
+export function isValidEmail(email: string): boolean {
+  return /^\S+@\S+\.\S+$/.test(email);
+}

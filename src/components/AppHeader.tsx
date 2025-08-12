@@ -5,6 +5,7 @@ import StoreIcon from "@mui/icons-material/StorefrontOutlined";
 import FeedIcon from "@mui/icons-material/WhatshotOutlined";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import { useTheme } from "@mui/material/styles";
@@ -12,13 +13,16 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useLocation, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { AccountButton } from "~/components/AccountButton";
+import { SignUpDialog } from "~/components/dialogs/SignUpDialog";
 import { SignInButton } from "~/components/SignInButton";
 import { WalletButton } from "~/components/WalletButton";
 import { useSignerStatus } from "~/store/accountKitStore";
 
 export function AppHeader() {
   const { isConnected: hasSigner } = useSignerStatus();
+  const [isSignUpDialogOpen, setIsSignUpDialogOpen] = useState(false);
 
   const navigate = useNavigate();
   const page = useLocation({
@@ -81,13 +85,28 @@ export function AppHeader() {
 
       <Stack direction="row" spacing={1.5}>
         {!hasSigner ?
-          <SignInButton />
+          <>
+            <Button
+              variant="text"
+              onClick={() => setIsSignUpDialogOpen(true)}
+              size="large"
+            >
+              Sign Up
+            </Button>
+            <SignInButton
+              openSignUpDialog={() => setIsSignUpDialogOpen(true)}
+            />
+          </>
         : <>
             <WalletButton />
             <AccountButton />
           </>
         }
       </Stack>
+      <SignUpDialog
+        open={isSignUpDialogOpen}
+        onClose={() => setIsSignUpDialogOpen(false)}
+      />
     </Stack>
   );
 }
