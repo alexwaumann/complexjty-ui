@@ -23,9 +23,6 @@ export function useSignIn(): UseSignInResult {
   } = useMutation(
     {
       mutationFn: async (signInType: SignInType) => {
-        if (!signer) {
-          throw new Error("Signer not initialized");
-        }
         const username = `initial-passkey - ${new Date().toLocaleString()}`;
         switch (signInType) {
           case "passkey":
@@ -52,7 +49,7 @@ export function useSignIn(): UseSignInResult {
       },
       mutationKey: ["signIn"],
     },
-    queryClient
+    queryClient,
   );
 
   return {

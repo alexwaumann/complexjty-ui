@@ -11,7 +11,7 @@ export function useGetAuthMethods() {
     {
       queryKey: ["get-auth-methods", user?.orgId],
       queryFn: async () => {
-        if (!isSignerConnected || !signer) {
+        if (!isSignerConnected) {
           throw Error("useListAuthMethods: no signer connected");
         }
 
@@ -21,7 +21,7 @@ export function useGetAuthMethods() {
           recoveryEmail: authMethods.email,
         };
       },
-      enabled: !!user && !!signer && isSignerConnected,
+      enabled: !!user && isSignerConnected,
     },
     queryClient,
   );
