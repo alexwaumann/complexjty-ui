@@ -3,7 +3,7 @@ import { queryClient } from "~/config";
 import { useSigner } from "~/store/accountKitStore";
 import type { User } from "@account-kit/signer";
 
-export type SignInType = "passkey" | "newPasskey";
+export type SignInType = "google" | "passkey" | "newPasskey";
 
 export type UseSignInResult = {
   signIn: UseMutateFunction<User, Error, SignInType, unknown>;
@@ -25,6 +25,14 @@ export function useSignIn(): UseSignInResult {
       mutationFn: async (signInType: SignInType) => {
         const username = `initial-passkey - ${new Date().toLocaleString()}`;
         switch (signInType) {
+          case "google":
+            return signer.authenticate({
+              type: "oauth",
+              mode: "redirect",
+              authProviderId: "google",
+              redirectUrl: window.location.href,
+            });
+
           case "passkey":
             return signer.authenticate({
               type: "passkey",

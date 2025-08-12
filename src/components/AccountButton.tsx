@@ -1,6 +1,7 @@
 import AddIcon from "@mui/icons-material/AddOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EmailIcon from "@mui/icons-material/EmailOutlined";
+import GoogleIcon from "@mui/icons-material/Google";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import PasskeyIcon from "@mui/icons-material/Key";
 import Button from "@mui/material/Button";
@@ -77,63 +78,76 @@ export function AccountButton() {
             <Typography variant="subtitle2" color="textSecondary">
               Manage Account
             </Typography>
-            {!authMethods?.recoveryEmail && (
-              <Tooltip
-                title="Accounts with no recovery email risk losing account access if the passkey is lost."
-                disableInteractive
-              >
-                <InfoOutlined
-                  color="action"
-                  sx={{ width: "16px", height: "16px" }}
-                />
-              </Tooltip>
-            )}
+            <Tooltip
+              title="Accounts with no recovery email risk losing account access if the passkey is lost."
+              disableInteractive
+            >
+              <InfoOutlined
+                color="action"
+                sx={{ width: "16px", height: "16px" }}
+              />
+            </Tooltip>
           </Stack>
 
-          {authMethods?.passkeys.map((passkeyInfo) => (
-            <Stack
-              direction="row"
-              spacing={3}
-              alignItems="center"
-              key={passkeyInfo.authenticatorId}
-            >
-              <PasskeyIcon />
+          {authMethods?.type === "google" && (
+            <Stack direction="row" spacing={3} alignItems="center">
+              <GoogleIcon />
               <Stack direction="column" flexGrow={1}>
-                <Typography variant="body2">{passkeyInfo.name}</Typography>
+                <Typography variant="body2">{authMethods.email}</Typography>
                 <Typography variant="caption" color="textSecondary">
-                  Passkey
+                  Google Account
                 </Typography>
               </Stack>
             </Stack>
-          ))}
+          )}
+          {authMethods?.type === "passkey" && (
+            <>
+              {authMethods.passkeys.map((passkeyInfo) => (
+                <Stack
+                  direction="row"
+                  spacing={3}
+                  alignItems="center"
+                  key={passkeyInfo.authenticatorId}
+                >
+                  <PasskeyIcon />
+                  <Stack direction="column" flexGrow={1}>
+                    <Typography variant="body2">{passkeyInfo.name}</Typography>
+                    <Typography variant="caption" color="textSecondary">
+                      Passkey
+                    </Typography>
+                  </Stack>
+                </Stack>
+              ))}
 
-          <Stack direction="row" spacing={3} alignItems="center">
-            <EmailIcon color="disabled" />
-            <Stack direction="column" flexGrow={1}>
-              <Typography color="textDisabled" variant="body2">
-                {authMethods?.recoveryEmail ?? "N/A"}
-              </Typography>
-              <Typography variant="caption" color="textSecondary">
-                Recovery Email
-              </Typography>
-            </Stack>
-            <Stack direction="row" alignItems="center">
-              {authMethods?.recoveryEmail && (
-                <Tooltip title="Remove recovery email">
-                  <IconButton color="error">
-                    <DeleteIcon />
-                  </IconButton>
-                </Tooltip>
-              )}
-              {!authMethods?.recoveryEmail && (
-                <Tooltip title="Add recovery email">
-                  <IconButton disabled color="primary">
-                    <AddIcon />
-                  </IconButton>
-                </Tooltip>
-              )}
-            </Stack>
-          </Stack>
+              <Stack direction="row" spacing={3} alignItems="center">
+                <EmailIcon color="disabled" />
+                <Stack direction="column" flexGrow={1}>
+                  <Typography color="textDisabled" variant="body2">
+                    {authMethods.recoveryEmail ?? "N/A"}
+                  </Typography>
+                  <Typography variant="caption" color="textSecondary">
+                    Recovery Email
+                  </Typography>
+                </Stack>
+                <Stack direction="row" alignItems="center">
+                  {authMethods.recoveryEmail && (
+                    <Tooltip title="Remove recovery email">
+                      <IconButton color="error">
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+                  {!authMethods.recoveryEmail && (
+                    <Tooltip title="Add recovery email">
+                      <IconButton disabled color="primary">
+                        <AddIcon />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+                </Stack>
+              </Stack>
+            </>
+          )}
         </Stack>
 
         <Divider />

@@ -1,3 +1,4 @@
+import GoogleIcon from "@mui/icons-material/Google";
 import PasskeyIcon from "@mui/icons-material/Key";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
@@ -55,6 +56,22 @@ export function SignInButton() {
           justifyContent="center"
           spacing={1.5}
         >
+          <Button
+            loadingPosition="start"
+            loading={isSigningIn && signInType === "google"}
+            disabled={isSigningIn && signInType !== "google"}
+            onClick={() =>
+              signIn("google", {
+                onSuccess: () => setSignInPopoverAnchor(null),
+              })
+            }
+            variant="contained"
+            startIcon={<GoogleIcon />}
+            fullWidth
+          >
+            Sign in with Google
+          </Button>
+
           <Button
             loadingPosition="start"
             loading={isSigningIn && signInType === "passkey"}
