@@ -1,7 +1,7 @@
 import { useMutation, type UseMutateFunction } from "@tanstack/react-query";
 import { queryClient } from "~/config";
 import { useSigner } from "~/store/accountKitStore";
-import type { User } from "@account-kit/core";
+import type { User } from "@account-kit/signer";
 
 export type SignInType = "passkey" | "newPasskey";
 

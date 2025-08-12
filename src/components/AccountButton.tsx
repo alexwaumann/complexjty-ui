@@ -16,12 +16,12 @@ import { useState } from "react";
 import { Pfp } from "~/components/ui/Pfp";
 import { useGetAuthMethods } from "~/hooks/account-kit/useGetAuthMethods";
 import { useSignOut } from "~/hooks/account-kit/useSignOut";
-import { useAccount } from "~/store/accountKitStore";
+import { useSmartAccountClient } from "~/store/accountKitStore";
 import { formatKey } from "~/utils/common";
 
 export function AccountButton() {
   const { authMethods } = useGetAuthMethods();
-  const { address } = useAccount();
+  const { address } = useSmartAccountClient();
   const { signOut, isSigningOut } = useSignOut();
   const theme = useTheme();
   const [accountAnchor, setAccountAnchor] = useState<HTMLButtonElement | null>(

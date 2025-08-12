@@ -16,12 +16,12 @@ import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import { formatEther } from "viem";
 import { alchemySdk } from "~/config";
-import { useAccount, useUser } from "~/store/accountKitStore";
+import { useSmartAccountClient, useUser } from "~/store/accountKitStore";
 
 // TODO: secured by passkey and/or google oauth depending on auth details
 export function WalletButton() {
   const user = useUser();
-  const { account, address } = useAccount();
+  const { client, address } = useSmartAccountClient();
   const [isAccountDeployed, setIsAccountDeployed] = useState(false);
   const [etherBalance, setEtherBalance] = useState(0);
 
@@ -32,15 +32,15 @@ export function WalletButton() {
   );
 
   useEffect(() => {
-    if (!account) {
+    if (!client) {
       return;
     }
 
-    account
+    client.account
       .isAccountDeployed()
       .then((isDeployed) => setIsAccountDeployed(isDeployed))
       .catch(() => false);
-  }, [account]);
+  }, [client]);
 
   useEffect(() => {
     if (!address) {
