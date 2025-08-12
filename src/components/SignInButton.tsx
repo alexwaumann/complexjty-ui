@@ -1,5 +1,6 @@
 import GoogleIcon from "@mui/icons-material/Google";
 import PasskeyIcon from "@mui/icons-material/Key";
+import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
@@ -8,11 +9,11 @@ import Stack from "@mui/material/Stack";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
+import { PasskeySyncDialog } from "~/components/dialogs/PasskeySyncDialog";
 import { useSignIn } from "~/hooks/account-kit/useSignIn";
-import { PasskeySyncDialog } from "./dialogs/PasskeySyncDialog";
 
 export function SignInButton() {
-  const { signIn, isSigningIn, signInType } = useSignIn();
+  const { signIn, isSigningIn, signInType, signInError } = useSignIn();
   const theme = useTheme();
 
   const [isPasskeySyncDialogOpen, setIsPasskeySyncDialogOpen] = useState(false);
@@ -26,7 +27,6 @@ export function SignInButton() {
         variant="contained"
         onClick={(event) => setSignInPopoverAnchor(event.currentTarget)}
         size="large"
-        sx={{ opacity: isPopoverOpen ? "0.6" : "1.0" }}
       >
         Sign in
       </Button>
@@ -40,22 +40,24 @@ export function SignInButton() {
           paper: {
             sx: {
               mt: 2,
-              p: 2,
-              minWidth: "320px",
-              [theme.breakpoints.down("sm")]: {
-                width: "100%",
-              },
+              px: 4,
+              py: 2,
+              [theme.breakpoints.up("sm")]: { minWidth: "360px" },
+              [theme.breakpoints.down("sm")]: { width: "100%" },
             },
           },
           backdrop: { invisible: false },
         }}
       >
-        <Stack
-          direction="column"
-          alignItems="center"
-          justifyContent="center"
-          spacing={1.5}
-        >
+        <Stack direction="column" alignItems="center" gap={2}>
+          <Avatar
+            sizes=""
+            src="/public/logo.png"
+            sx={{ width: 72, height: 72 }}
+          />
+
+          <Typography variant="h6">Complexjty</Typography>
+
           <Button
             loadingPosition="start"
             loading={isSigningIn && signInType === "google"}
@@ -88,16 +90,31 @@ export function SignInButton() {
             Sign in with Passkey
           </Button>
 
-          <Typography variant="caption" color="textSecondary">
-            Don't see your passkey?{" "}
-            <Link
-              component="button"
-              variant="caption"
-              onClick={() => setIsPasskeySyncDialogOpen(true)}
-            >
-              Learn how to sync
-            </Link>
-          </Typography>
+          {signInType === "passkey" && signInError && (
+            <Stack direction="column" alignItems="center" gap="1">
+              <Typography variant="caption" color="textSecondary">
+                Don't see your passkey?
+              </Typography>
+
+              <Link
+                component="button"
+                variant="caption"
+                onClick={() => setIsPasskeySyncDialogOpen(true)}
+              >
+                Learn how to sync passkeys across devices
+              </Link>
+
+              <Link
+                component="button"
+                variant="caption"
+                onClick={() =>
+                  console.warn("Account recovery not implemented yet")
+                }
+              >
+                Recover account with recovery email
+              </Link>
+            </Stack>
+          )}
 
           <Divider flexItem>
             <Typography variant="caption">OR</Typography>
