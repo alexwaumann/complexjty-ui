@@ -1,9 +1,10 @@
 import ArrowForwardIcon from "@mui/icons-material/ArrowForwardRounded";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutlined";
-import SyncedAcrossDevicesIcon from "@mui/icons-material/DevicesOutlined";
 import BiometricsIcon from "@mui/icons-material/FingerprintOutlined";
 import SecureIcon from "@mui/icons-material/GppGoodOutlined";
 import QrCodeIcon from "@mui/icons-material/QrCodeScannerOutlined";
+import OneTapSetupIcon from "@mui/icons-material/TouchAppOutlined";
+import TrustedSecurityIcon from "@mui/icons-material/VerifiedUserOutlined";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -47,9 +48,9 @@ export const SignUpDialog: React.FC<SignUpDialogProps> = ({
   const isPhoneScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [email, setEmail] = useState("");
-  const [stage, setStage] = useState<"createPasskey" | "setEmailRecovery">(
-    "createPasskey",
-  );
+  const [stage, setStage] = useState<
+    "createPasskey" | "setEmailRecovery" | "googleSignIn"
+  >("createPasskey");
 
   const handleSignUp = () => {
     signIn("newPasskey", {
@@ -88,7 +89,7 @@ export const SignUpDialog: React.FC<SignUpDialogProps> = ({
     <Dialog
       fullScreen={isPhoneScreen}
       open={open}
-      onClose={() => stage === "createPasskey" && handleCloseDialog()}
+      onClose={() => stage !== "setEmailRecovery" && handleCloseDialog()}
       disableRestoreFocus
       maxWidth="sm"
     >
@@ -103,7 +104,7 @@ export const SignUpDialog: React.FC<SignUpDialogProps> = ({
       {stage === "createPasskey" && (
         <>
           <DialogContent>
-            <Stack gap={3}>
+            <Stack gap={2}>
               <Typography variant="body1">
                 We've ditched passwords! Create a <strong>passkey</strong> to
                 sign in with your Face ID, fingerprint, or screen lock. It's the
@@ -111,19 +112,19 @@ export const SignUpDialog: React.FC<SignUpDialogProps> = ({
               </Typography>
 
               <Typography variant="body2" color="text.secondary">
-                Your passkey is saved securely on this device and synced across
-                your other devices through your Google Account or iCloud
-                Keychain.
+                Your passkey is saved securely on this device and automatically
+                synced across your other devices through your Google Account or
+                iCloud Keychain.
               </Typography>
 
               <List dense>
                 <ListItem>
                   <ListItemIcon>
-                    <SecureIcon fontSize="large" color="success" />
+                    <QrCodeIcon color="success" />
                   </ListItemIcon>
                   <ListItemText
-                    primary="Phishing-Resistant Security"
-                    secondary="Passkeys are bound to our website, protecting you from fake sites and scams."
+                    primary="Sign In Anywhere"
+                    secondary="Use your phone to securely sign in on any other device—like a friend's laptop—by scanning a QR code."
                   />
                 </ListItem>
                 <ListItem>
@@ -137,23 +138,19 @@ export const SignUpDialog: React.FC<SignUpDialogProps> = ({
                 </ListItem>
                 <ListItem>
                   <ListItemIcon>
-                    <SyncedAcrossDevicesIcon fontSize="large" color="success" />
+                    <SecureIcon fontSize="large" color="success" />
                   </ListItemIcon>
                   <ListItemText
-                    primary="Synced Across Devices"
-                    secondary="Your passkey is automatically available on your other personal phones, tablets, and computers."
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemIcon>
-                    <QrCodeIcon color="success" />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Sign In Anywhere"
-                    secondary="Use your phone to securely log in on any other device—like a friend's laptop—by scanning a QR code."
+                    primary="Phishing-Resistant Security"
+                    secondary="Passkeys are bound to our website, protecting you from fake sites and scams."
                   />
                 </ListItem>
               </List>
+
+              <Typography variant="caption" color="text.secondary">
+                You will be prompted by your device to save your passkey using
+                your Face ID, fingerprint, or screen lock.
+              </Typography>
 
               <Typography variant="caption">
                 By signing up, you agree to the{" "}
@@ -169,12 +166,13 @@ export const SignUpDialog: React.FC<SignUpDialogProps> = ({
           </DialogContent>
 
           <DialogActions sx={{ p: 2 }}>
-            <Button variant="text" onClick={() => handleCloseDialog()}>
-              Cancel
+            <Button variant="text" onClick={() => setStage("googleSignIn")}>
+              Try another way
             </Button>
             <Button
               loading={isSigningIn}
               loadingPosition="start"
+              autoFocus
               variant="contained"
               onClick={() => handleSignUp()}
             >
@@ -237,6 +235,71 @@ export const SignUpDialog: React.FC<SignUpDialogProps> = ({
           <DialogActions sx={{ p: 2 }}>
             <Button variant="text" onClick={() => handleCloseDialog()}>
               {isSetRecoveryEmailSuccess ? "Close" : "Skip for now"}
+            </Button>
+          </DialogActions>
+        </>
+      )}
+
+      {stage === "googleSignIn" && (
+        <>
+          <DialogContent>
+            <Stack gap={2}>
+              <Typography variant="body1">
+                Don't want to create a passkey?{" "}
+                <strong>Sign in with your Google Account</strong> instead.
+              </Typography>
+
+              <List dense>
+                <ListItem>
+                  <ListItemIcon>
+                    <OneTapSetupIcon fontSize="large" color="success" />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Simple Sign-In"
+                    secondary="Sign in with Google for one-tap setup. No new password or passkey is needed."
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon>
+                    <TrustedSecurityIcon fontSize="large" color="success" />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Trusted Security"
+                    secondary="Your account is protected by your existing Google login and security settings."
+                  />
+                </ListItem>
+              </List>
+
+              <Typography variant="caption" color="text.secondary">
+                You will be directed to Google to securely sign in. Our sign-in
+                process is powered by Alchemy.
+              </Typography>
+
+              <Typography variant="caption">
+                By signing in, you agree to the{" "}
+                <Link
+                  href="https://www.alchemy.com/terms-conditions/end-user-terms"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Terms of Service
+                </Link>
+              </Typography>
+            </Stack>
+          </DialogContent>
+
+          <DialogActions sx={{ p: 2 }}>
+            <Button variant="text" onClick={() => handleCloseDialog()}>
+              Cancel
+            </Button>
+            <Button
+              loading={isSigningIn}
+              loadingPosition="start"
+              autoFocus
+              variant="contained"
+              onClick={() => signIn("google")}
+            >
+              {isSigningIn ? "Signing in" : "Sign in with Google"}
             </Button>
           </DialogActions>
         </>
