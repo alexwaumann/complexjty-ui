@@ -95,7 +95,7 @@ export const SignUpDialog: React.FC<SignUpDialogProps> = ({
     >
       <DialogTitle>
         <Stack alignItems="center" gap={2}>
-          <Avatar src="/public/logo.png" sx={{ width: 72, height: 72 }} />
+          <Avatar src="/logo.png" sx={{ width: 72, height: 72 }} />
 
           <Typography variant="h6">Complexjty</Typography>
         </Stack>

@@ -56,7 +56,7 @@ export function SignInButton({ openSignUpDialog }: SignInButtonProps) {
       >
         <Stack gap={3}>
           <Stack alignItems="center" gap={2}>
-            <Avatar src="/public/logo.png" sx={{ width: 72, height: 72 }} />
+            <Avatar src="/logo.png" sx={{ width: 72, height: 72 }} />
             <Typography variant="h6">Complexjty</Typography>
           </Stack>
 
