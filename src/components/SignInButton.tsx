@@ -54,79 +54,84 @@ export function SignInButton({ openSignUpDialog }: SignInButtonProps) {
           backdrop: { invisible: false },
         }}
       >
-        <Stack direction="column" alignItems="center" gap={2}>
-          <Avatar src="/public/logo.png" sx={{ width: 72, height: 72 }} />
+        <Stack gap={3}>
+          <Stack alignItems="center" gap={2}>
+            <Avatar src="/public/logo.png" sx={{ width: 72, height: 72 }} />
+            <Typography variant="h6">Complexjty</Typography>
+          </Stack>
 
-          <Typography variant="h6">Complexjty</Typography>
+          <Stack gap={2}>
+            <Button
+              loadingPosition="start"
+              loading={isSigningIn && signInType === "google"}
+              disabled={isSigningIn && signInType !== "google"}
+              onClick={() =>
+                signIn("google", {
+                  onSuccess: () => setSignInPopoverAnchor(null),
+                })
+              }
+              variant="contained"
+              startIcon={<GoogleIcon />}
+              fullWidth
+            >
+              Sign in with Google
+            </Button>
 
-          <Button
-            loadingPosition="start"
-            loading={isSigningIn && signInType === "google"}
-            disabled={isSigningIn && signInType !== "google"}
-            onClick={() =>
-              signIn("google", {
-                onSuccess: () => setSignInPopoverAnchor(null),
-              })
-            }
-            variant="contained"
-            startIcon={<GoogleIcon />}
-            fullWidth
-          >
-            Sign in with Google
-          </Button>
+            <Button
+              loadingPosition="start"
+              loading={isSigningIn && signInType === "passkey"}
+              disabled={isSigningIn && signInType !== "passkey"}
+              onClick={() =>
+                signIn("passkey", {
+                  onSuccess: () => setSignInPopoverAnchor(null),
+                })
+              }
+              variant="contained"
+              startIcon={<PasskeyIcon />}
+              fullWidth
+            >
+              Sign in with Passkey
+            </Button>
 
-          <Button
-            loadingPosition="start"
-            loading={isSigningIn && signInType === "passkey"}
-            disabled={isSigningIn && signInType !== "passkey"}
-            onClick={() =>
-              signIn("passkey", {
-                onSuccess: () => setSignInPopoverAnchor(null),
-              })
-            }
-            variant="contained"
-            startIcon={<PasskeyIcon />}
-            fullWidth
-          >
-            Sign in with Passkey
-          </Button>
+            {signInType === "passkey" && signInError && (
+              <Stack alignItems="start" gap="1">
+                <Typography variant="caption" color="textSecondary">
+                  Lost your passkey?{" "}
+                  <Link
+                    component="button"
+                    onClick={() =>
+                      console.warn("Account recovery not implemented yet")
+                    }
+                  >
+                    Recover account with email.
+                  </Link>
+                </Typography>
 
-          {signInType === "passkey" && signInError && (
-            <Stack direction="column" alignItems="center" gap="1">
-              <Typography variant="caption" color="textSecondary">
-                Don't see your passkey?
-              </Typography>
+                <Typography variant="caption" color="textSecondary">
+                  Don't see your passkey?{" "}
+                  <Link
+                    component="button"
+                    onClick={() => setIsPasskeySyncDialogOpen(true)}
+                  >
+                    Sync passkeys guide.
+                  </Link>
+                </Typography>
+              </Stack>
+            )}
+          </Stack>
 
-              <Link
-                component="button"
-                variant="caption"
-                onClick={() => {
-                  openSignUpDialog();
-                  setSignInPopoverAnchor(null);
-                }}
-              >
-                Sign up with passkey
-              </Link>
-
-              <Link
-                component="button"
-                variant="caption"
-                onClick={() =>
-                  console.warn("Account recovery not implemented yet")
-                }
-              >
-                Recover account with email
-              </Link>
-
-              <Link
-                component="button"
-                variant="caption"
-                onClick={() => setIsPasskeySyncDialogOpen(true)}
-              >
-                Sync passkeys across your devices
-              </Link>
-            </Stack>
-          )}
+          <Typography variant="body2" color="textSecondary">
+            New to Complexjty?{" "}
+            <Link
+              component="button"
+              onClick={() => {
+                openSignUpDialog();
+                setSignInPopoverAnchor(null);
+              }}
+            >
+              Sign up now.
+            </Link>
+          </Typography>
         </Stack>
       </Popover>
       <PasskeySyncDialog

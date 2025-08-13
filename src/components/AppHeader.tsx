@@ -5,7 +5,6 @@ import StoreIcon from "@mui/icons-material/StorefrontOutlined";
 import FeedIcon from "@mui/icons-material/WhatshotOutlined";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import { useTheme } from "@mui/material/styles";
@@ -85,18 +84,7 @@ export function AppHeader() {
 
       <Stack direction="row" spacing={1.5}>
         {!hasSigner ?
-          <>
-            <Button
-              variant="text"
-              onClick={() => setIsSignUpDialogOpen(true)}
-              size="large"
-            >
-              Sign Up
-            </Button>
-            <SignInButton
-              openSignUpDialog={() => setIsSignUpDialogOpen(true)}
-            />
-          </>
+          <SignInButton openSignUpDialog={() => setIsSignUpDialogOpen(true)} />
         : <>
             <WalletButton />
             <AccountButton />
