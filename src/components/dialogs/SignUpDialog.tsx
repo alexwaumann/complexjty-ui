@@ -1,3 +1,4 @@
+import { ArrowDownward as ArrowDownwardIcon } from "@mui/icons-material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForwardRounded";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutlined";
 import BiometricsIcon from "@mui/icons-material/FingerprintOutlined";
@@ -11,6 +12,8 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import Fab from "@mui/material/Fab";
+import Fade from "@mui/material/Fade";
 import Link from "@mui/material/Link";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -21,7 +24,7 @@ import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSetRecoveryEmail } from "~/hooks/account-kit/useSetRecoveryEmail";
 import { useSignIn } from "~/hooks/account-kit/useSignIn";
 import { isValidEmail } from "~/utils/common";
@@ -51,6 +54,10 @@ export const SignUpDialog: React.FC<SignUpDialogProps> = ({
   const [stage, setStage] = useState<
     "createPasskey" | "setEmailRecovery" | "googleSignIn"
   >("createPasskey");
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const [showScrollButton, setShowScrollButton] = useState(false);
+
+  const dialogContentRef = useRef<HTMLDivElement>(null);
 
   const handleSignUp = () => {
     signIn("newPasskey", {
@@ -85,6 +92,54 @@ export const SignUpDialog: React.FC<SignUpDialogProps> = ({
     setTimeout(() => reset(), 250);
   };
 
+  const handleScrollToBottom = () => {
+    dialogContentRef.current?.scrollTo({
+      top: dialogContentRef.current.scrollHeight,
+      behavior: "smooth",
+    });
+  };
+
+  useEffect(() => {
+    const contentElement = dialogContentRef.current;
+    if (!contentElement) return;
+
+    const checkOverflow = () => {
+      const hasOverflow = contentElement.scrollHeight > contentElement.clientHeight;
+      setIsOverflowing(hasOverflow);
+      if (hasOverflow && contentElement.scrollTop === 0) {
+        setShowScrollButton(true);
+      } else {
+        setShowScrollButton(false);
+      }
+    };
+
+    const resizeObserver = new ResizeObserver(checkOverflow);
+    resizeObserver.observe(contentElement);
+
+    let scrollTimer: NodeJS.Timeout;
+    const handleScroll = () => {
+      if (showScrollButton) {
+        setShowScrollButton(false);
+      }
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        if (contentElement.scrollTop === 0 && isOverflowing) {
+          setShowScrollButton(true);
+        }
+      }, 150);
+    };
+
+    contentElement.addEventListener("scroll", handleScroll);
+
+    checkOverflow();
+
+    return () => {
+      resizeObserver.disconnect();
+      contentElement.removeEventListener("scroll", handleScroll);
+      clearTimeout(scrollTimer);
+    };
+  }, [isOverflowing, showScrollButton]);
+
   return (
     <Dialog
       fullScreen={isPhoneScreen}
@@ -103,7 +158,20 @@ export const SignUpDialog: React.FC<SignUpDialogProps> = ({
 
       {stage === "createPasskey" && (
         <>
-          <DialogContent>
+          <DialogContent
+            ref={dialogContentRef}
+            sx={{
+              overflowY: "auto",
+              "&::-webkit-scrollbar": {
+                width: "8px",
+                backgroundColor: "rgba(0,0,0,0.05)",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: "rgba(0,0,0,0.2)",
+                borderRadius: "4px",
+              },
+            }}
+          >
             <Stack gap={2}>
               <Typography variant="body1">
                 We've ditched passwords! Create a <strong>passkey</strong> to
@@ -164,6 +232,21 @@ export const SignUpDialog: React.FC<SignUpDialogProps> = ({
               </Typography>
             </Stack>
           </DialogContent>
+
+          <Fade in={showScrollButton}>
+            <Fab
+              size="small"
+              color="primary"
+              onClick={handleScrollToBottom}
+              sx={{
+                position: "absolute",
+                bottom: { xs: 80, sm: 90 },
+                right: { xs: 16, sm: 30 },
+              }}
+            >
+              <ArrowDownwardIcon />
+            </Fab>
+          </Fade>
 
           <DialogActions sx={{ p: 2 }}>
             <Button variant="text" onClick={() => setStage("googleSignIn")}>
