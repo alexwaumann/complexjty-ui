@@ -15,4 +15,5 @@ export const alchemyAccountsConfig = createConfig({
   transport: alchemy({ apiKey: import.meta.env.VITE_ALCHEMY_KEY }),
   policyId: import.meta.env.VITE_ALCHEMY_POLICY_ID,
   sessionConfig: { storage: "localStorage", expirationTimeMs: 1000 * 60 * 60 },
+  enablePopupOauth: true,
 });

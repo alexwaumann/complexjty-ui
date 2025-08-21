@@ -10,6 +10,7 @@ export type UseSignInResult = {
   isSigningIn: boolean;
   signInType: SignInType | undefined;
   signInError: Error | null;
+  resetUseSignIn: () => void;
 };
 
 export function useSignIn(): UseSignInResult {
@@ -20,6 +21,7 @@ export function useSignIn(): UseSignInResult {
     isPending: isSigningIn,
     variables: signInType,
     error: signInError,
+    reset: resetUseSignIn,
   } = useMutation(
     {
       mutationFn: async (signInType: SignInType) => {
@@ -28,9 +30,8 @@ export function useSignIn(): UseSignInResult {
           case "google":
             return signer.authenticate({
               type: "oauth",
-              mode: "redirect",
+              mode: "popup",
               authProviderId: "google",
-              redirectUrl: window.location.href,
             });
 
           case "passkey":
@@ -65,5 +66,6 @@ export function useSignIn(): UseSignInResult {
     isSigningIn,
     signInType,
     signInError,
+    resetUseSignIn,
   };
 }

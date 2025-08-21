@@ -14,7 +14,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { AccountButton } from "~/components/AccountButton";
-import { SignUpDialog } from "~/components/dialogs/SignUpDialog";
+import { OnboardDialog } from "~/components/dialogs/OnboardDialog";
 import { SignInButton } from "~/components/SignInButton";
 import { WalletButton } from "~/components/WalletButton";
 import { useSignerStatus } from "~/store/accountKitStore";
@@ -91,7 +91,7 @@ export function AppHeader() {
           </>
         }
       </Stack>
-      <SignUpDialog
+      <OnboardDialog
         open={isSignUpDialogOpen}
         onClose={() => setIsSignUpDialogOpen(false)}
       />
