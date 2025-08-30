@@ -55,5 +55,10 @@ export default tseslint.config(
       "prefer-const": "error",
     },
   },
+  {
+    rules: {
+      "@typescript-eslint/no-unused-vars": "off",
+    },
+  },
   eslintConfigPrettier,
 );
