@@ -14,9 +14,9 @@
     "format:check": "prettier . --check"
   },
   "dependencies": {
-    "@account-kit/core": "^4.47.0",
-    "@account-kit/infra": "^4.47.0",
-    "@account-kit/signer": "^4.49.0",
+    "@account-kit/core": "^4.59.1",
+    "@account-kit/infra": "^4.59.1",
+    "@account-kit/signer": "^4.59.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@fontsource/roboto": "^5.2.6",
