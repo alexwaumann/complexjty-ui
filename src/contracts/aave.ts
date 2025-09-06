@@ -47,6 +47,7 @@ class AaveContract {
 
   constructor() {}
 
+  // TODO: only reserveData is dynamic, the rest can be cached and invalidated on some hourly interval for client use
   async fetchTokenReserveData(address: Address): Promise<TokenReserveData> {
     const [
       configData,
@@ -77,7 +78,7 @@ class AaveContract {
       loanToValue,
       liquidationThreshold,
       liquidationPenalty,
-      _,
+      _reserveFactor,
       isUsageAsCollateralEnabled,
       isBorrowingEnabled,
       isActive,
@@ -85,18 +86,18 @@ class AaveContract {
     ] = configData;
 
     const [
-      _0,
-      _1,
-      _2,
+      _unbacked,
+      _accruedToTreasuryScaled,
+      _totalAToken,
       totalStableDebt,
       totalVariableDebt,
       liquidityRate,
       borrowRate,
-      _3,
-      _4,
-      _5,
-      _6,
-      _7,
+      _stableBorrowRate,
+      _averageStableBorrowRate,
+      _liquidityIndex,
+      _variableBorrowIndex,
+      _lastUpdateTimestamp,
     ] = reserveData;
 
     return {
