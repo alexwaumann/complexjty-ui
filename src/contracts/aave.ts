@@ -4,7 +4,7 @@ import { alchemyAccountsConfig } from "~/config";
 import { IAaveOracle_ABI } from "~/data/abis/IAaveOracle";
 import { IAaveProtocolDataProvider_ABI } from "~/data/abis/IAaveProtocolDataProvider";
 
-type TokenReserveData = {
+export type TokenReserveData = {
   address: Address;
   decimals: number;
 
@@ -46,6 +46,10 @@ class AaveContract {
   });
 
   constructor() {}
+
+  fetchTokenUsdPrice(address: Address): Promise<bigint> {
+    return this.oracleContract.read.getAssetPrice([address]);
+  }
 
   // TODO: only reserveData is dynamic, the rest can be cached and invalidated on some hourly interval for client use
   async fetchTokenReserveData(address: Address): Promise<TokenReserveData> {
